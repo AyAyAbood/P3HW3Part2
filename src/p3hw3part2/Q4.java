@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.OptionalDouble;
 import java.util.Scanner;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
@@ -37,6 +38,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import sun.launcher.resources.launcher;
+import static java.util.Comparator.comparingInt;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
 
 public class Q4 extends Application {
 
@@ -47,6 +51,7 @@ public class Q4 extends Application {
     public void start(Stage primaryStage) throws IOException {
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
+        Label lastLabel = new Label("insert Students with diffrent IDs");
         Label welcome = new Label("Welcome");
         welcome.getStyleClass().add("thicc");
         Label username = new Label("User name");
@@ -160,36 +165,47 @@ public class Q4 extends Application {
                 public void handle(ActionEvent eventT) {
                     if (eventT.getSource() == Add2 && IDTxt.getText().length() != 0 && NameTxt.getText().length() != 0 && MajorTxt.getText().length() != 0 && GradeTxt.getText().length() != 0) {
 
-                        stdsNew.add(new Student(Integer.parseInt(IDTxt.getText()), NameTxt.getText(), MajorTxt.getText(), Double.parseDouble(GradeTxt.getText())));
-
+                        
+                        /*
+                        stds.add(new Student(Integer.parseInt(IDTxt.getText()), NameTxt.getText(), MajorTxt.getText(), Double.parseDouble(GradeTxt.getText())));
                         listView1.getItems().clear();
-                        ArrayList<Student> stdsNew1 = (ArrayList<Student>) stdsNew.stream().sorted(Comparator.comparing(Student::getName)).collect(Collectors.toList());
+                        List<Student> std1 = stds.stream().collect(collectingAndThen(toCollection(() -> new TreeSet<>(comparingInt(Student::getId))), ArrayList::new));
+                        List<Student> std2 = std1.stream().sorted(Comparator.comparing(Student::getGrade).reversed()).collect(Collectors.toList());
+                        std2.forEach((val) -> {
+                            listView1.getItems().add(val.getId() + "    " + val.getName() + "       " + val.getMajor() + "          " + val.getGrade());
+                        });
+                        */
+                        stdsNew.add(new Student(Integer.parseInt(IDTxt.getText()), NameTxt.getText(), MajorTxt.getText(), Double.parseDouble(GradeTxt.getText())));
+                        ArrayList<Student> stdsNewN = stdsNew.stream().collect(collectingAndThen(toCollection(() -> new TreeSet<>(comparingInt(Student::getId))), ArrayList::new));
+                        listView1.getItems().clear();
+                        ArrayList<Student> stdsNew1 = (ArrayList<Student>) stdsNewN.stream().sorted(Comparator.comparing(Student::getName)).collect(Collectors.toList());
+                        
                         stdsNew1.forEach((val) -> {
                             listView1.getItems().add(val.getId() + "    " + val.getName() + "       " + val.getMajor() + "          " + val.getGrade());
                         });
 
                         listView2.getItems().clear();
-                        List<String> stdsNew2 = stdsNew.stream().sorted(Comparator.comparing(Student::getGrade).reversed()).map(e -> e.getName() + "     " + e.getGrade()).collect(Collectors.toList());
+                        List<String> stdsNew2 = stdsNewN.stream().sorted(Comparator.comparing(Student::getGrade).reversed()).map(e -> e.getName() + "     " + e.getGrade()).collect(Collectors.toList());
                         stdsNew2.forEach((val) -> {
                             listView2.getItems().add(val);
                         });
 
                         listView3.getItems().clear();
-                        List<String> stdsNew3 = stdsNew.stream().filter(e -> e.getGrade() >= 80 && e.getGrade() <= 90).sorted(Comparator.comparing(Student::getGrade).reversed()).map(e -> e.getName() + "     " + e.getGrade()).collect(Collectors.toList());
+                        List<String> stdsNew3 = stdsNewN.stream().filter(e -> e.getGrade() >= 80 && e.getGrade() <= 90).sorted(Comparator.comparing(Student::getGrade).reversed()).map(e -> e.getName() + "     " + e.getGrade()).collect(Collectors.toList());
                         stdsNew3.forEach((val) -> {
                             listView3.getItems().add(val);
                         });
 
-                        double[] grades = new double[stdsNew.size()];
-                        for (int i = 0; i < stdsNew.size(); i++) {
-                            grades[i] = stdsNew.get(i).getGrade();
+                        double[] grades = new double[stdsNewN.size()];
+                        for (int i = 0; i < stdsNewN.size(); i++) {
+                            grades[i] = stdsNewN.get(i).getGrade();
                         }
                         
                         double avg = DoubleStream.of(grades).average().getAsDouble();
                         LVL4.setText(String.valueOf(avg));
                         
                         listView5.getItems().clear();
-                        List<Student> stdsNew5 = stdsNew;
+                        List<Student> stdsNew5 = stdsNewN;
                         stdsNew5.stream().collect(Collectors.groupingBy(Student::getMajor)).forEach((major,stdMajor) -> {
                             listView5.getItems().add(major);
                             stdMajor.forEach(e -> listView5.getItems().add(e.getId() + "    " + e.getName() + "       " + e.getMajor() + "          " + e.getGrade()));
@@ -221,6 +237,7 @@ public class Q4 extends Application {
             HBox myButtons = new HBox(7, Add2, Reset, Exit);
             GridPane gg2 = new GridPane();
             gg2.add(sd, 0, 0);
+            gg2.add(lastLabel,1,0);
             gg2.add(ID, 0, 1);
             gg2.add(IDTxt, 1, 1);
             gg2.add(Name, 0, 2);
