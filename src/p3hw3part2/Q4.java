@@ -165,21 +165,11 @@ public class Q4 extends Application {
                 public void handle(ActionEvent eventT) {
                     if (eventT.getSource() == Add2 && IDTxt.getText().length() != 0 && NameTxt.getText().length() != 0 && MajorTxt.getText().length() != 0 && GradeTxt.getText().length() != 0) {
 
-                        
-                        /*
-                        stds.add(new Student(Integer.parseInt(IDTxt.getText()), NameTxt.getText(), MajorTxt.getText(), Double.parseDouble(GradeTxt.getText())));
-                        listView1.getItems().clear();
-                        List<Student> std1 = stds.stream().collect(collectingAndThen(toCollection(() -> new TreeSet<>(comparingInt(Student::getId))), ArrayList::new));
-                        List<Student> std2 = std1.stream().sorted(Comparator.comparing(Student::getGrade).reversed()).collect(Collectors.toList());
-                        std2.forEach((val) -> {
-                            listView1.getItems().add(val.getId() + "    " + val.getName() + "       " + val.getMajor() + "          " + val.getGrade());
-                        });
-                        */
                         stdsNew.add(new Student(Integer.parseInt(IDTxt.getText()), NameTxt.getText(), MajorTxt.getText(), Double.parseDouble(GradeTxt.getText())));
                         ArrayList<Student> stdsNewN = stdsNew.stream().collect(collectingAndThen(toCollection(() -> new TreeSet<>(comparingInt(Student::getId))), ArrayList::new));
                         listView1.getItems().clear();
                         ArrayList<Student> stdsNew1 = (ArrayList<Student>) stdsNewN.stream().sorted(Comparator.comparing(Student::getName)).collect(Collectors.toList());
-                        
+
                         stdsNew1.forEach((val) -> {
                             listView1.getItems().add(val.getId() + "    " + val.getName() + "       " + val.getMajor() + "          " + val.getGrade());
                         });
@@ -200,13 +190,13 @@ public class Q4 extends Application {
                         for (int i = 0; i < stdsNewN.size(); i++) {
                             grades[i] = stdsNewN.get(i).getGrade();
                         }
-                        
+
                         double avg = DoubleStream.of(grades).average().getAsDouble();
                         LVL4.setText(String.valueOf(avg));
-                        
+
                         listView5.getItems().clear();
                         List<Student> stdsNew5 = stdsNewN;
-                        stdsNew5.stream().collect(Collectors.groupingBy(Student::getMajor)).forEach((major,stdMajor) -> {
+                        stdsNew5.stream().collect(Collectors.groupingBy(Student::getMajor)).forEach((major, stdMajor) -> {
                             listView5.getItems().add(major);
                             stdMajor.forEach(e -> listView5.getItems().add(e.getId() + "    " + e.getName() + "       " + e.getMajor() + "          " + e.getGrade()));
                         });
@@ -237,7 +227,7 @@ public class Q4 extends Application {
             HBox myButtons = new HBox(7, Add2, Reset, Exit);
             GridPane gg2 = new GridPane();
             gg2.add(sd, 0, 0);
-            gg2.add(lastLabel,1,0);
+            gg2.add(lastLabel, 1, 0);
             gg2.add(ID, 0, 1);
             gg2.add(IDTxt, 1, 1);
             gg2.add(Name, 0, 2);
@@ -250,7 +240,7 @@ public class Q4 extends Application {
             gg2.add(new VBox(3, LVL1, listView1), 3, 0, 1, 6);
             gg2.add(new VBox(3, LVL2, listView2), 3, 7, 1, 6);
             gg2.add(new VBox(3, LVL3, listView3), 3, 14, 1, 6);
-            gg2.add(new VBox(3, LVL4Title,LVL4), 4, 1,1,3);
+            gg2.add(new VBox(3, LVL4Title, LVL4), 4, 1, 1, 3);
             gg2.add(new VBox(3, LVL5, listView5), 4, 5, 1, 6);
             gg2.setAlignment(Pos.TOP_LEFT);
             gg2.setPadding(new Insets(10, 0, 0, 20));
