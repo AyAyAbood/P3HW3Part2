@@ -1,7 +1,7 @@
 package p3hw3part2;
 
 public class P3HW3Part2 {
-
+// :D
     public static void main(String[] args) {
         /*
         for the questions see the classes in this project :)
